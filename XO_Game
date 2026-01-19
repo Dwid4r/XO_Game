@@ -1,0 +1,101 @@
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
+        int countX = 0, countO = 0;
+        char ans;
+
+        do {
+            char[][] board = new char[3][3];
+            for (int r = 0; r < 3; r++) {
+                for (int c = 0; c < 3; c++) {
+                    board[r][c] = ' ';
+                }
+            }
+
+            char player = 'X';
+            boolean gameOver = false;
+            int moves = 0;
+
+            while (!gameOver) {
+                printBoard(board);
+
+                System.out.println("Player " + player + " enter row and col (0-2): ");
+                int row = in.nextInt();
+                int col = in.nextInt();
+
+               
+                if (row < 0 || row > 2 || col < 0 || col > 2) {
+                    System.out.println(" Out of range! Enter 0-2 فقط.");
+                    continue;
+                }
+
+                if (board[row][col] == ' ') {
+                    board[row][col] = player;
+                    moves++;
+
+                    if (checkWinner(board, player)) {
+                        printBoard(board);
+                        System.out.println(" Player " + player + " has won!");
+
+                        if (player == 'X') countX++;
+                        else countO++;
+
+                        gameOver = true;
+                    } else if (moves == 9) {
+                        printBoard(board);
+                        System.out.println(" Draw!");
+                        gameOver = true;
+                    } else {
+                        player = (player == 'X') ? 'O' : 'X';
+                    }
+
+                } else {
+                    System.out.println(" Invalid move.");
+                }
+            }
+
+            System.out.println("Do you want to play again? (y/n)");
+            ans = in.next().charAt(0);
+
+        } while (ans == 'y' || ans == 'Y');
+
+        System.out.println("Game over!");
+        System.out.println("Player X won " + countX + " time(s).");
+        System.out.println("Player O won " + countO + " time(s).");
+
+        in.close();
+    }
+
+    public static boolean checkWinner(char[][] board, char player) {
+        for (int r = 0; r < 3; r++) {
+            if (board[r][0] == player && board[r][1] == player && board[r][2] == player)
+                return true;
+        }
+
+        for (int c = 0; c < 3; c++) {
+            if (board[0][c] == player && board[1][c] == player && board[2][c] == player)
+                return true;
+        }
+
+        if (board[0][0] == player && board[1][1] == player && board[2][2] == player)
+            return true;
+
+        if (board[0][2] == player && board[1][1] == player && board[2][0] == player)
+            return true;
+
+        return false;
+    }
+
+    public static void printBoard(char[][] board) {
+        System.out.println();
+        for (int r = 0; r < 3; r++) {
+            System.out.println(" " + board[r][0] + " | " + board[r][1] + " | " + board[r][2]);
+            if (r != 2) System.out.println("---+---+---");
+        }
+        System.out.println();
+    }
+}
